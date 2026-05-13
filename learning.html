@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Mastery: 3-Day Journey</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #f8fafc;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        .card-enter {
+            animation: fadeIn 0.4s ease-out forwards;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .code-block {
+            background: #1e293b;
+            color: #38bdf8;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-size: 0.875em;
+        }
+        
+        .tab-active {
+            border-bottom: 2px solid #0ea5e9;
+            color: #0ea5e9;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="font-sans text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 bg-brand-500 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                    &lt;/&gt;
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-slate-900 leading-tight">HTML Mastery</h1>
+                    <p class="text-xs text-slate-500 font-medium">Your 3-Day Learning Plan</p>
+                </div>
+            </div>
+            
+            <div class="w-full md:w-auto flex-1 max-w-md relative">
+                <input type="text" id="searchInput" placeholder="Search tags, attributes, or keywords..." 
+                    class="w-full bg-slate-100 text-slate-900 px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all shadow-inner">
+                <svg class="w-5 h-5 absolute right-3 top-2.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex overflow-x-auto hide-scrollbar gap-6 border-b border-slate-200" id="tabs">
+                <button data-day="all" class="tab-btn pb-3 pt-2 px-1 text-sm font-medium text-slate-500 hover:text-slate-700 whitespace-nowrap tab-active">All Content</button>
+                <button data-day="1" class="tab-btn pb-3 pt-2 px-1 text-sm font-medium text-slate-500 hover:text-slate-700 whitespace-nowrap">Day 1: Basics & Media</button>
+                <button data-day="2" class="tab-btn pb-3 pt-2 px-1 text-sm font-medium text-slate-500 hover:text-slate-700 whitespace-nowrap">Day 2: Structure & Forms</button>
+                <button data-day="3" class="tab-btn pb-3 pt-2 px-1 text-sm font-medium text-slate-500 hover:text-slate-700 whitespace-nowrap">Day 3: Text, Tables & Advanced</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-slate-800" id="sectionTitle">All Content</h2>
+            
+            <div class="flex gap-2">
+                <select id="typeFilter" class="bg-white border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-brand-500 focus:border-brand-500 block p-2 outline-none">
+                    <option value="all">Tags & Attributes</option>
+                    <option value="tag">Only Tags</option>
+                    <option value="attribute">Only Attributes</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Cards Container -->
+        <div id="cardsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Cards will be injected here via JavaScript -->
+        </div>
+
+        <!-- Empty State Container -->
+        <div id="emptyState" class="hidden flex-col items-center justify-center py-20 text-center">
+            <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-4">
+                <svg class="w-10 h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <h3 class="text-lg font-medium text-slate-900">No results found</h3>
+            <p class="text-slate-500 mt-1">Try adjusting your search or filters.</p>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 py-6 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-slate-500">
+            <p>Designed for your 3-Day HTML Mastery Plan. Remember: Practice makes perfect!</p>
+        </div>
+    </footer>
+
+    <script>
+        // The master dataset compiled from your prompt with added deep-dives
+        const htmlData = [
+            //            // --- DAY 1 ---
+            { day: 1, type: 'tag', name: '<a>', desc: 'Used to link the website to other pages or external sites.', how: '<a href="https://example.com">Click Me</a>', why: 'Essential for web navigation. Use this instead of JS click events for accessibility.', comp: 'Never use a <button> to navigate to a new URL. Use <a> for navigation, <button> for actions.' },
+            { day: 1, type: 'tag', name: '<br>', desc: 'Used to break a line.', how: 'Line 1<br>Line 2', why: 'Use only for poetic formatting or postal addresses, not for creating visual margins/padding (use CSS for that).', comp: '' },
+            { day: 1, type: 'tag', name: '<address>', desc: 'Used to give proper address details for the author/owner of a document.', how: '<address>Written by Jon<br>Box 564, City</address>', why: 'Provides semantic meaning to contact info, helping search engines (SEO) know exactly where your business is located.', comp: '' },
+            { day: 1, type: 'tag', name: '<iframe>', desc: 'Displays nested content from other websites like YouTube or Google Maps.', how: '<iframe src="map_url" title="Office Location"></iframe>', why: 'The modern standard for embedding external web pages securely. PM Note: Always add a "title" attribute for accessibility, or screen readers will just say "frame".', comp: 'Vs <embed>/<object>: iframe is specifically for HTML documents; embed/object are for plugins/files.' },
+            { day: 1, type: 'tag', name: '<object>', desc: 'Displays files like PDFs. Can show a fallback (download link) if it fails.', how: '<object data="file.pdf">Fallback text</object>', why: 'Great for documents because you can put fallback HTML inside the tag if the user lacks a PDF viewer.', comp: 'Vs <embed>: embed cannot have fallback content inside it.' },
+            
+            //            { day: 1, type: 'tag', name: '<embed>', desc: 'Simply embeds content (like flash or older media) as is, without a backup plan.', how: '<embed src="file.swf">', why: 'Older tag, largely replaced by <audio>, <video>, or <iframe>, but still exists for browser plugins.', comp: '' },
+            { day: 1, type: 'tag', name: '<dfn>', desc: 'Used to indicate the defining instance of a term.', how: '<dfn>HTML</dfn> is a markup language...', why: 'Tells browsers and screen readers "I am defining this word right now". Good for technical glossaries.', comp: '' },
+            { day: 1, type: 'tag', name: '<video>', desc: 'Used to display locally stored or linked video files.', how: '<video src="vid.mp4" controls></video>', why: 'Native HTML5 video playback without needing third-party plugins. Keeps users on your site instead of sending them to YouTube.', comp: '' },
+            { day: 1, type: 'tag', name: '<track>', desc: 'Specifies subtitles, caption files, or other files containing text, for <video> and <audio>.', how: '<video><track src="subtitles_en.vtt" kind="subtitles" srclang="en"></video>', why: 'Crucial for Accessibility (ADA compliance) so deaf users can read subtitles. Also helps PMs rank video content in search engines.', comp: '' },
+            { day: 1, type: 'tag', name: '<picture>', desc: 'Container for offering multiple image sources for different screen sizes.', how: '<picture><source srcset="small.jpg" media="(max-width: 600px)"><img src="large.jpg"></picture>', why: 'PM Note: Massive performance boost. Loads a tiny image on mobile networks, and a 4K image on desktop Wi-Fi. Fixes slow load times.', comp: 'Vs <img>: <img> only loads one size. <picture> is responsive art direction.' },
+            
+            //            { day: 1, type: 'tag', name: '<abbr>', desc: 'Displays the full meaning while hovering on a specific abbreviated element.', how: '<abbr title="World Health Org">WHO</abbr>', why: 'Accessibility! Helps screen readers pronounce it correctly and helps users understand acronyms.', comp: '' },
+            { day: 1, type: 'tag', name: '<map> & <area>', desc: 'Maps a specific clickable area on an image using coordinates.', how: '<map name="planet"><area shape="circle" coords="x,y,r" href="..."></map>', why: 'Allows one single image to have multiple different clickable links (like an interactive campus map).', comp: '' },
+            { day: 1, type: 'tag', name: '<img>', desc: 'Used to display an image.', how: '<img src="pic.jpg" alt="Description" loading="lazy">', why: 'Always include "alt" for screen readers/SEO. PM Note: Add loading="lazy" so off-screen images don\'t slow down the initial page load!', comp: '' },
+            { day: 1, type: 'tag', name: '<input>', desc: 'Gives the user the ability to input data.', how: '<input type="text" placeholder="Name">', why: 'The core element of interactive forms. Captures user leads, search queries, and login info.', comp: '' },
+            { day: 1, type: 'tag', name: '<label>', desc: 'Gives a label to an input field, denoting what it is for.', how: '<label for="user">Name:</label><input id="user">', why: 'Clicking the label focuses the input. PM Note: Crucial for mobile UX (makes checkboxes much easier to tap with thick thumbs).', comp: '' },
+            { day: 1, type: 'tag', name: '<del>', desc: 'Shows text that has been deleted (usually gets a strikethrough).', how: '<del>Old Price: $50</del>', why: 'Semantically tells the browser this was removed. Great for E-commerce "original price" displays.', comp: 'Vs <s>: <del> is for document edits (version control). <s> is for things simply no longer accurate.' },
+            { day: 1, type: 'tag', name: '<ins>', desc: 'Shows text that has been inserted/corrected (usually underlined).', how: '<ins>New Price: $40</ins>', why: 'Used alongside <del> to track changes in a document or show promotional updated pricing.', comp: '' },
+            
+            //            { day: 1, type: 'attribute', name: 'accept', desc: 'Limits the types of files a user can upload.', how: '<input type="file" accept="video/*, audio/*">', why: 'Improves UX by preventing users from uploading a PDF when you asked for a Profile Picture (JPG).', comp: '' },
+            { day: 1, type: 'attribute', name: 'type (Input)', desc: 'Changes the input behavior (radio, checkbox, text, color, password, email, date, etc).', how: '<input type="email">', why: 'PM Note: Using type="email" or type="number" forces mobile phones to show the correct specialized keyboard (e.g., showing the "@" symbol automatically).', comp: '' },
+            { day: 1, type: 'attribute', name: 'width / height', desc: 'Determines the dimension size of elements like img, canvas, iframe.', how: '<img src="a.jpg" width="500" height="300">', why: 'Performance tip: Including these prevents "Cumulative Layout Shift" (elements jumping around as images load), improving your Google Core Web Vitals score.', comp: '' },
+            { day: 1, type: 'attribute', name: 'value', desc: 'Pre-fills a textbox or assigns a value to a button/checkbox.', how: '<input type="text" value="John Doe">', why: 'Sets initial state or defines exactly what data string is sent to the database upon submit.', comp: '' },
+            { day: 1, type: 'attribute', name: 'action', desc: 'Specifies where to send the form-data when a form is submitted.', how: '<form action="/api/submit-lead">', why: 'Routes the user\'s data to your backend server to be saved.', comp: '' },
+
+            //            // --- DAY 2 ---
+            { day: 2, type: 'tag', name: '<main>', desc: 'Contains the dominant content of the body.', how: '<main>Core content here</main>', why: 'SEO & Accessibility: Tells screen readers to skip the header/nav and go straight to the meat of the page.', comp: 'Rule: Use only ONE <main> per page. Never put it inside a <header>, <nav>, or <footer>.' },
+            { day: 2, type: 'tag', name: '<article>', desc: 'A self-contained composition in a document.', how: '<article><h2>Blog Post Title</h2><p>...</p></article>', why: 'SEO: Tells Google "This block of content can be stripped out and syndicated (like on Apple News or an RSS feed) and still make sense independently".', comp: 'Vs <section>: <article> makes sense on its own (a blog post). <section> is just a thematic grouping (e.g., "Contact Info" chapter).' },
+            { day: 2, type: 'tag', name: '<section>', desc: 'A generic standalone section of a document, typically with a heading.', how: '<section><h2>Testimonials</h2>...</section>', why: 'Breaks long pages into readable chapters. Screen readers use these to map out the document outline.', comp: 'Vs <div>: If you are adding a container just to apply CSS flexbox, use <div>. If it groups a distinct topic, use <section>.' },
+            { day: 2, type: 'tag', name: '<nav>', desc: 'A section of a page whose purpose is to provide navigation links.', how: '<nav><ul><li><a href="/">Home</a></li></ul></nav>', why: 'Accessibility: Allows disabled users to hit a shortcut key to immediately jump to your website\'s menu.', comp: '' },
+            { day: 2, type: 'tag', name: '<aside>', desc: 'Content loosely related to the main content (like a sidebar).', how: '<aside><h4>Related Posts</h4><ul>...</ul></aside>', why: 'Tells search engines "This is supplementary, don\'t treat this as the main topic of the page." Great for ad banners or sidebars.', comp: '' },
+            { day: 2, type: 'tag', name: '<div>', desc: 'A generic container to make specific layout boxes. Crucial for structure.', how: '<div class="grid-container">...</div>', why: 'Groups elements together strictly for styling with CSS or targeting with JS.', comp: 'Vs Semantic tags: Only use <div> as a last resort if no semantic tag (like <article>, <section>, <nav>) fits better.' },
+            
+            //            { day: 2, type: 'tag', name: '<head>', desc: 'Tells browser how to render page, links CSS/JS, provides SEO to Google.', how: '<head><title>My Site</title></head>', why: 'Invisible to the user but contains all the "brain" and settings of the HTML document.', comp: '' },
+            { day: 2, type: 'tag', name: '<title>', desc: 'Displays the name of the website in the top browser tab.', how: '<title>Home | My Store</title>', why: 'Crucial for SEO and bookmarks. It\'s the blue clickable link that shows up in Google Search results.', comp: '' },
+            { day: 2, type: 'tag', name: '<header>', desc: 'Top introductory part. Screen readers announce it as "Banner Region".', how: '<header><nav>Links</nav></header>', why: 'Semantically better than a <div> for the top logo/nav area. Helps blind users map the page layout.', comp: '' },
+            { day: 2, type: 'tag', name: '<link>', desc: 'Links external resources like CSS stylesheets or Google Fonts.', how: '<link rel="stylesheet" href="style.css">', why: 'Keeps HTML clean by moving styles to a separate file (Separation of Concerns).', comp: '' },
+            { day: 2, type: 'tag', name: '<span>', desc: 'An inline container to target a specific piece of text without breaking lines.', how: 'I have <span style="color:red">red</span> shoes.', why: 'Allows you to style a single word without creating a new paragraph block.', comp: 'Vs <div>: div is block-level (creates new line); span is inline (stays on same line).' },
+            
+            //            { day: 2, type: 'tag', name: '<form>', desc: 'Bundles labels, inputs, and buttons together to submit data.', how: '<form method="POST">...</form>', why: 'Groups inputs so they can be sent to a server as a single package when "Submit" is clicked.', comp: '' },
+            { day: 2, type: 'tag', name: '<button>', desc: 'A clickable element where users interact to trigger logic.', how: '<button>Click Me</button>', why: 'Standard interactive element. Highly customizable and accessible.', comp: 'Vs <input type="button">: <button> can contain HTML (like icons/images) inside it, input cannot.' },
+            { day: 2, type: 'tag', name: '<fieldset> & <legend>', desc: 'Groups related elements in a form and adds a caption/title.', how: '<fieldset><legend>Shipping Address</legend><input...></fieldset>', why: 'Massive UX improvement for long forms (like checkout pages). Screen readers announce the Legend before reading the inputs inside it.', comp: '' },
+            { day: 2, type: 'tag', name: '<datalist>', desc: 'Provides an "autocomplete" feature for <input> elements.', how: '<input list="browsers"><datalist id="browsers"><option value="Chrome"></datalist>', why: 'Gives users a dropdown of suggested values, but still allows them to type whatever they want. Combines a textbox with a select dropdown!', comp: 'Vs <select>: Select FORCES a choice. Datalist merely SUGGESTS choices.' },
+            { day: 2, type: 'tag', name: '<output>', desc: 'Represents the result of a calculation or user action.', how: '<output name="result">100</output>', why: 'Semantic tag for showing math results (e.g., a mortgage calculator updating the monthly payment in real-time).', comp: '' },
+
+            //            { day: 2, type: 'attribute', name: 'class', desc: 'Groups elements to apply reusable CSS properties.', how: '<div class="card shadow">', why: 'The backbone of CSS styling (like Tailwind!). You can assign the same class to multiple elements.', comp: 'Vs id: classes are for multiple elements; IDs must be unique per page.' },
+            { day: 2, type: 'attribute', name: 'id', desc: 'A unique identifier for a specific, singular item.', how: '<div id="main-header">', why: 'Used for precise JS targeting (getElementById) or anchor link jumping (href="#id").', comp: '' },
+            { day: 2, type: 'attribute', name: 'data-*', desc: 'Stores hidden custom data directly in HTML for JS to read later.', how: '<button data-song-id="track_99">Play</button>', why: 'Architecture standard: Cleanest way to embed backend database IDs securely into frontend UI elements.', comp: 'Always start with "data-" (e.g., data-price). Custom-id="1" is invalid HTML.' },
+            { day: 2, type: 'attribute', name: 'disabled', desc: 'Disables a button or input field.', how: '<button disabled>Processing...</button>', why: 'Prevents users from clicking "Buy" twice while the payment is processing.', comp: 'Vs readonly: disabled fields are NOT sent when the form submits. readonly fields ARE sent.' },
+            { day: 2, type: 'attribute', name: 'autofocus', desc: 'Automatically focuses the cursor on this field when the page loads.', how: '<input type="text" autofocus>', why: 'PM Note: Improves conversion rates on landing pages (like the Google search bar focusing immediately).', comp: '' },
+            { day: 2, type: 'attribute', name: 'method', desc: 'Defines how form data is sent ("GET" or "POST").', how: '<form method="POST">', why: 'GET: Puts data in URL (search results, shareable links). POST: Hides sensitive data in the HTTP body (passwords, large documents).', comp: '' },
+            { day: 2, type: 'attribute', name: 'target', desc: 'Where to open the linked document (same window or new tab).', how: '<a href="url" target="_blank">', why: 'Use "_blank" to open links in a new tab so users don\'t lose their place on your website/checkout flow.', comp: '' },
+            { day: 2, type: 'attribute', name: 'type (Button)', desc: 'Defines the button\'s behavior (submit, reset, button).', how: '<button type="button">', why: 'If inside a form, defaults to "submit". PM Note: ALWAYS specify type="button" if it only triggers JS logic, otherwise it might accidentally refresh the page!', comp: '' },
+
+            //            // --- DAY 3 ---
+            { day: 3, type: 'tag', name: '<canvas>', desc: 'A blank whiteboard space where JavaScript can draw graphics, games, or paint.', how: '<canvas id="game"></canvas>', why: 'Allows high-performance 2D and 3D (WebGL) rendering directly in the browser. Used for browser games and charts.', comp: '' },
+            { day: 3, type: 'tag', name: '<audio>', desc: 'Used for playing audio files natively.', how: '<audio src="music.mp3" controls></audio>', why: 'No need for external media players anymore.', comp: '' },
+            { day: 3, type: 'tag', name: '<p> & <h1>-<h6>', desc: 'Paragraphs and Headings. <h1> is top priority, <h6> is lowest.', how: '<h1>Main Title</h1><p>Text...</p>', why: 'Establishes document hierarchy. SEO PM Note: Google heavily weights H1 and H2 tags to understand what keywords your page should rank for.', comp: '' },
+            { day: 3, type: 'tag', name: '<table>, <tr>, <th>, <td>', desc: 'Creates a table. tr=Row, th=Heading, td=Data.', how: '<table><tr><th>Name</th></tr>...</table>', why: 'Best way to display structured tabular/spreadsheet data.', comp: 'Never use tables for page layouts (like they did in the 90s). Use CSS Grid/Flexbox instead.' },
+            { day: 3, type: 'tag', name: '<caption>', desc: 'Defines the title/caption of a table.', how: '<table><caption>Sales Report Q3</caption>...</table>', why: 'Provides accessible context to what the table data represents for blind users.', comp: '' },
+            { day: 3, type: 'tag', name: '<details> & <summary>', desc: 'Creates an interactive widget the user can open/close to reveal more info.', how: '<details><summary>What is HTML?</summary>Markup language.</details>', why: 'Native accordion/dropdown! Requires ZERO JavaScript. PM Note: Perfect for creating fast, lightweight FAQ sections.', comp: '' },
+            
+            //            { day: 3, type: 'tag', name: '<cite>', desc: 'Defines the title of a creative work (book, painting, song). Defaults to italic.', how: '<cite>The Mona Lisa</cite>', why: 'Semantic tag to give credit to artistic works. Search engines catalog these.', comp: '' },
+            { day: 3, type: 'tag', name: '<blockquote> & <q>', desc: 'Blockquote for long external quotes, <q> for short inline quotes.', how: '<blockquote><p>To be or not to be</p></blockquote>', why: 'Semantic styling. <q> automatically adds smart quotation marks around the text.', comp: '' },
+            { day: 3, type: 'tag', name: '<code> & <pre>', desc: '<code> highlights technical code text. <pre> preserves exact spacing/formatting.', how: '<pre><code>  let x = 5;\n  console.log(x);</code></pre>', why: 'Browsers normally ignore extra spaces. <pre> forces the browser to respect your spaces and line breaks (great for displaying code).', comp: '' },
+            { day: 3, type: 'tag', name: '<kbd>', desc: 'Represents user input (like keyboard strokes or voice commands).', how: 'Press <kbd>Ctrl</kbd> + <kbd>C</kbd> to copy.', why: 'Semantic tag. By default, browsers style it in a monospace font to look like a keyboard key.', comp: '' },
+            { day: 3, type: 'tag', name: '<samp>', desc: 'Represents sample output from a computer program.', how: 'Error: <samp>File not found</samp>', why: 'Usually paired with <code> and <kbd> in technical documentation to denote what the terminal printed out.', comp: '' },
+            { day: 3, type: 'tag', name: '<sub> & <sup>', desc: 'Subscript (lowered) and Superscript (raised) text.', how: 'H<sub>2</sub>O and E=mc<sup>2</sup>', why: 'Crucial for accurate display of chemical formulas, mathematical exponents, and footnotes.', comp: '' },
+            { day: 3, type: 'tag', name: '<em> & <i>', desc: '<em> gives semantic emphasis. <i> just makes text visually italic.', how: 'You <em>must</em> submit it!', why: 'Screen readers change their tone of voice (stress) for <em>. They do not for <i>.', comp: 'Use <em> for spoken stress, <i> for foreign words, ship names, or technical terms.' },
+            { day: 3, type: 'tag', name: '<strong>', desc: 'Highlights text with strong semantic importance (bold).', how: '<strong>Warning:</strong> Hot water.', why: 'Tells search engines and screen readers the text is crucial/urgent.', comp: 'Vs <b>: <b> is just visual bolding (like a bold headline), <strong> implies urgent importance.' },
+            
+            //            { day: 3, type: 'tag', name: '<ul>, <ol>, <li>', desc: 'Lists. ul=Unordered (bullets), ol=Ordered (numbers 1,2,3), li=List Item.', how: '<ol><li>First step</li></ol>', why: 'Organizes data clearly. Search engines love bulleted lists for Google "Snippet" answers.', comp: '' },
+            { day: 3, type: 'tag', name: '<hr>', desc: 'Creates a horizontal dividing line.', how: '<hr>', why: 'Signifies a thematic break between paragraphs or sections, not just a visual line.', comp: '' },
+            { day: 3, type: 'tag', name: '<dialog>', desc: 'Pops up a dialog box/modal on the screen natively.', how: '<dialog open>Alert!</dialog>', why: 'Replaces messy custom CSS/JS modals. It comes with built-in accessibility features (like trapping the keyboard focus inside it).', comp: '' },
+            { day: 3, type: 'tag', name: '<dl>, <dt>, <dd>', desc: 'Description List. dt=Term (Question), dd=Details (Answer).', how: '<dl><dt>Coffee</dt><dd>Hot drink</dd></dl>', why: 'Perfect for glossaries, dictionaries, or term definitions.', comp: 'Use this instead of <ul> if you are specifically creating "Term : Definition" pairs.' },
+            { day: 3, type: 'tag', name: '<footer>', desc: 'The lower layout of a site containing copyright or contact info.', how: '<footer>&copy; 2026</footer>', why: 'Semantic structure. Easy for screen readers to skip directly to the bottom contact info.', comp: '' },
+            { day: 3, type: 'tag', name: '<meta>', desc: 'Sits in <head>. Tells Google what the site is about (SEO, Viewport).', how: '<meta name="description" content="A guide">', why: 'PM Note: The "description" meta tag is the paragraph text that shows up below your link on Google Search.', comp: '' },
+            { day: 3, type: 'tag', name: '<progress> vs <meter>', desc: 'progress: Task moving to completion. meter: Static measurement (battery, disk).', how: '<progress value="50" max="100"></progress>', why: 'Progress is active (loading bar). Meter is a snapshot (storage space).', comp: 'PM Note: Never use <progress> for disk space, use <meter>.' },
+            { day: 3, type: 'tag', name: '<s>', desc: 'Denotes text is no longer accurate or relevant (strikethrough).', how: '<s>Was $50</s> Now $20', why: 'Different from <del> which means it was physically deleted from the doc edit history.', comp: '' },
+            
+            //            { day: 3, type: 'tag', name: '<bdi> & <bdo>', desc: 'Bi-directional text tags for mixed right-to-left (Arabic) and left-to-right languages.', how: '<bdi>User name</bdi> : 5 points', why: 'Prevents punctuation from rendering wildly out of place when mixing English and Arabic/Hebrew in user-generated content.', comp: '' },
+            { day: 3, type: 'tag', name: '<ruby>, <rt>, <rp>', desc: 'Used for adding pronunciation guides above characters (common in East Asian languages).', how: '<ruby>漢<rt>kan</rt></ruby>', why: 'Crucial for Japanese (Furigana) or Chinese (Pinyin) localization so users know how to read complex characters.', comp: '' },
+            { day: 3, type: 'tag', name: '<wbr>', desc: 'Word Break Opportunity. Specifies where in a long text it is OK to add a line-break.', how: 'Super<wbr>califragilistic...', why: 'Prevents massive words/URLs from breaking out of their CSS containers on tiny mobile screens.', comp: 'Vs <br>: <br> forces a break ALWAYS. <wbr> only breaks IF the screen is too small.' },
+            { day: 3, type: 'tag', name: '<colgroup> & <col>', desc: 'Applies styling/colors to entire table columns efficiently.', how: '<colgroup><col span="2" class="bg-red"></colgroup>', why: 'Prevents having to add CSS classes to every single <td> in a massive table.', comp: '' },
+            { day: 3, type: 'tag', name: '<figure> & <figcaption>', desc: 'Wraps self-contained content like illustrations, photos, or diagrams with a caption.', how: '<figure><img><figcaption>A cat</figcaption></figure>', why: 'Semantically links an image and its caption together so screen readers know they are explicitly related.', comp: '' },
+            { day: 3, type: 'tag', name: '<mark>', desc: 'Highlights text (usually yellow).', how: '<mark>Highlighted</mark>', why: 'UX feature: Extremely useful for showing the exact keywords that matched the user\'s search query.', comp: '' },
+            { day: 3, type: 'tag', name: '<svg>', desc: 'Container for Scalable Vector Graphics (shapes, icons).', how: '<svg><circle r="50"/></svg>', why: 'PM Note: SVGs are resolution-independent. They never blur on retina screens, have tiny file sizes, and can be animated with CSS.', comp: 'Vs <img> (.png): PNGs lose quality when zoomed in. SVGs are math-based and scale perfectly.' },
+            { day: 3, type: 'tag', name: '<template>', desc: 'Holds HTML that is hidden on load, waiting for JS to clone and display it.', how: '<template id="card"><div></div></template>', why: 'Performance: The browser parses the HTML but doesn\'t render it or fetch images inside it until JavaScript asks it to.', comp: 'Vs hidden <div>: Hidden divs still load images and take up memory. Templates are completely dormant.' },
+            { day: 3, type: 'tag', name: '<var>', desc: 'Represents a variable in programming or math (defaults to italic).', how: 'Area = <var>w</var> &times; <var>h</var>', why: 'Semantic markup for technical documentation.', comp: '' },
+            { day: 3, type: 'tag', name: '<time>', desc: 'Used to display times and dates in a machine-readable format.', how: '<time datetime="2026-05-13">Tomorrow</time>', why: 'SEO PM Note: Helps search engines understand event dates, which can result in Google showing a special "Event Calendar" snippet for your site.', comp: '' },
+            
+            //            { day: 3, type: 'attribute', name: 'autoplay', desc: 'Starts media automatically when ready.', how: '<audio autoplay muted>', why: 'PM Note: Browsers will aggressively block autoplaying videos UNLESS the "muted" attribute is also present. Users hate surprise sound.', comp: '' },
+            { day: 3, type: 'attribute', name: 'name', desc: 'Identifies form data to the server, or names a meta tag.', how: '<input name="username">', why: 'Essential for Forms. The "name" is the exact variable name your backend Node/Python server looks for.', comp: 'Vs id: id is for frontend CSS/JS targeting; name is for backend data submission.' },
+            { day: 3, type: 'attribute', name: 'max / min', desc: 'Sets minimum and maximum values in progress/meter tags or input numbers.', how: '<input type="number" min="1" max="10">', why: 'Built-in form validation! Prevents users from ordering -5 items before the data even reaches JavaScript.', comp: '' },
+            { day: 3, type: 'attribute', name: 'tabindex', desc: 'Allows elements to be focused via keyboard navigation (Tab key).', how: '<div tabindex="0">Clickable Card</div>', why: 'Accessibility standard. If you make a custom button out of a <div>, you MUST give it tabindex="0" so keyboard users can reach it.', comp: 'tabindex="0" makes it tabbable. tabindex="-1" makes it focusable only by JS.' },
+            { day: 3, type: 'attribute', name: 'contenteditable', desc: 'Turns any HTML element into an editable text area.', how: '<div contenteditable="true">Edit me</div>', why: 'This is the exact attribute used by Google Docs, Notion, and Medium to create rich-text editors on the web.', comp: '' },
+            { day: 3, type: 'attribute', name: 'draggable', desc: 'Specifies whether an element is draggable using the Drag and Drop API.', how: '<img draggable="true">', why: 'Used to build interactive dashboards (like Trello boards) where users can click and drag cards around.', comp: '' },
+            { day: 3, type: 'attribute', name: 'hidden', desc: 'Completely hides an element from the page and screen readers.', how: '<div hidden>Secret</div>', why: 'Cleaner than using inline CSS (style="display:none;"). Often toggled by JavaScript.', comp: '' },
+            { day: 3, type: 'attribute', name: 'aria-* (ARIA tags)', desc: 'Accessible Rich Internet Applications attributes. Provides extra info to screen readers.', how: '<button aria-label="Close Modal">X</button>', why: 'PM Note: If an icon button just says "X", a blind user doesn\'t know what it does. aria-label reads "Close Modal" out loud to them.', comp: '' },
+
+            // --- ADVANCED MASTERY & PM GOLDMINE ADDITIONS ---
+            { day: 2, type: 'tag', name: '<textarea>', desc: 'A multi-line text input control.', how: '<textarea rows="4" cols="50">Enter feedback...</textarea>', why: 'UX/PM Note: Essential for capturing long-form user feedback, support tickets, or comments. Allows users to resize the box to see what they typed.', comp: 'Vs <input type="text">: Input is only for a single line (like a name). Textarea allows line breaks (paragraphs).' },
+            { day: 2, type: 'tag', name: '<select> & <option>', desc: 'Creates a drop-down list.', how: '<select><option value="us">USA</option></select>', why: 'Saves massive amounts of screen real estate on mobile devices when asking users to choose from a long list (like Countries or States).', comp: 'Vs <datalist>: Select FORCES the user to pick from the list. Datalist allows them to pick OR type their own custom answer.' },
+            { day: 2, type: 'tag', name: '<optgroup>', desc: 'Groups related options in a <select> drop-down list.', how: '<select><optgroup label="Cars"><option>Volvo</option></optgroup></select>', why: 'UX/PM Note: Massively improves conversion rates on long dropdowns by organizing choices into visual categories (e.g., grouping US states by Region).', comp: '' },
+            
+            { day: 3, type: 'tag', name: '<thead>, <tbody>, <tfoot>', desc: 'Groups the header, body, and footer content in an HTML table.', how: '<table><thead><tr>...</tr></thead><tbody>...</tbody></table>', why: 'Accessibility & Printing: If a user prints your financial table, using these tags ensures the table header (thead) repeats at the top of every printed page automatically!', comp: '' },
+            { day: 3, type: 'tag', name: '<script>', desc: 'Embeds executable code or data; typically used to embed JavaScript.', how: '<script src="app.js" defer><\/script>', why: 'The engine of web interactivity. PM Note: Always use the "defer" attribute so your JS doesn\'t block the visual loading of the HTML page (fixes "Render Blocking" issues).', comp: '' },
+            { day: 3, type: 'tag', name: '<noscript>', desc: 'Defines fallback HTML content to display if the user has JavaScript disabled.', how: '<noscript>Please enable JS to use this app.</noscript>', why: 'Security & Enterprise: Many corporate firewalls or strict privacy browsers disable JS. This ensures those users don\'t just see a blank white page.', comp: '' },
+            { day: 2, type: 'tag', name: '<style>', desc: 'Contains CSS styling rules for that specific HTML document.', how: '<style> body { background: #000; } </style>', why: 'Used for extremely fast page loading where you want "Critical CSS" to load instantly without waiting for an external style.css file to download.', comp: 'Vs <link>: Use <link> for massive stylesheets shared across the whole site. Use <style> for tiny, single-page specific rules.' },
+            { day: 2, type: 'tag', name: '<base>', desc: 'Specifies the base URL/target for all relative URLs in a document.', how: '<base href="https://mysite.com/images/" target="_blank">', why: 'Developer efficiency. If you have 100 images in a folder, setting the <base> means you don\'t have to type the full URL 100 times.', comp: '' },
+
+            { day: 1, type: 'attribute', name: 'loading', desc: 'Specifies whether a browser should load an image/iframe immediately or lazy-load it.', how: '<img src="heavy.jpg" loading="lazy">', why: 'PERFORMANCE GOLDMINE: PMs love this. It stops images at the bottom of the page from loading until the user scrolls down to them, saving bandwidth and making the initial load lightning fast.', comp: 'loading="eager" loads instantly (use for the top banner). loading="lazy" waits until scroll.' },
+            { day: 1, type: 'attribute', name: 'rel', desc: 'Specifies the relationship between the current document and the linked document.', how: '<a href="url" rel="noopener noreferrer">Link</a>', why: 'SECURITY/SEO: Adding "noopener" prevents the newly opened tab from hijacking your site via JS. Adding "nofollow" tells Google NOT to pass your SEO ranking juice to the linked site.', comp: '' },
+            { day: 1, type: 'attribute', name: 'srcset & sizes', desc: 'Allows offering different image sizes and telling the browser which one to pick based on screen size.', how: '<img srcset="small.jpg 500w, large.jpg 1000w" sizes="(max-width: 600px) 500px, 1000px">', why: 'PM Note: Crucial for Google Core Web Vitals. Ensures a tiny iPhone doesn\'t waste data downloading a massive 4K desktop image.', comp: 'Like <picture>, but done directly on a single <img> tag for simpler variations.' },
+            { day: 1, type: 'attribute', name: 'sandbox', desc: 'Enables an extra set of restrictions for the content in an <iframe>.', how: '<iframe src="ads.html" sandbox></iframe>', why: 'SECURITY: If you embed third-party ads or widgets, "sandbox" completely disables their ability to run malicious scripts, open popups, or steal user cookies.', comp: '' },
+
+            { day: 2, type: 'attribute', name: 'pattern', desc: 'Specifies a Regular Expression (RegEx) that the input\'s value is checked against.', how: '<input type="text" pattern="[A-Za-z]{3}">', why: 'Frontend Security & UX: Validates data (like forcing exactly 3 letters for a currency code) instantly without waiting for a server response. Prevents junk data in your database.', comp: '' },
+            { day: 2, type: 'attribute', name: 'required', desc: 'Specifies that an input field must be filled out before submitting the form.', how: '<input type="email" required>', why: 'UX/PM Note: The simplest way to enforce data collection. Browsers natively highlight the field and stop the submission if left blank, requiring zero custom JS code.', comp: '' },
+            { day: 2, type: 'attribute', name: 'autocomplete', desc: 'Specifies whether a form/input should have autocomplete on or off.', how: '<input type="text" autocomplete="new-password">', why: 'CONVERSION UX: Helps users fill out checkout forms in 2 seconds using their saved Google/Apple Pay data. Setting it to "new-password" stops password managers from overwriting fields maliciously.', comp: '' },
+            { day: 3, type: 'attribute', name: 'role', desc: 'Defines what an element is and what it does for assistive technologies (Accessibility).', how: '<div role="button" tabindex="0">Click</div>', why: 'ACCESSIBILITY (ADA Compliance): If you design a fancy custom button using a <div>, a blind person\'s screen reader thinks it\'s just text. role="button" fixes this legally and functionally.', comp: '' }
+        ];
+
+        const cardsContainer = document.getElementById('cardsContainer');
+        const emptyState = document.getElementById('emptyState');
+        const searchInput = document.getElementById('searchInput');
+        const tabs = document.querySelectorAll('.tab-btn');
+        const typeFilter = document.getElementById('typeFilter');
+        const sectionTitle = document.getElementById('sectionTitle');
+
+        let currentDay = 'all';
+        let currentSearch = '';
+        let currentType = 'all';
+
+        function getBadgeColor(type) {
+            if (type === 'tag') {
+                return 'bg-blue-100 text-blue-700 border-blue-200';
+            }
+            return 'bg-emerald-100 text-emerald-700 border-emerald-200';
+        }
+
+        function renderCards() {
+            // Filter logic
+            const filteredData = htmlData.filter(item => {
+                const matchDay = currentDay === 'all' || item.day.toString() === currentDay;
+                const matchType = currentType === 'all' || item.type === currentType;
+                const matchSearch = item.name.toLowerCase().includes(currentSearch.toLowerCase()) || 
+                                    item.desc.toLowerCase().includes(currentSearch.toLowerCase()) ||
+                                    item.why.toLowerCase().includes(currentSearch.toLowerCase());
+                
+                return matchDay && matchType && matchSearch;
+            });
+
+            cardsContainer.innerHTML = '';
+
+            if (filteredData.length === 0) {
+                cardsContainer.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                emptyState.style.display = 'flex';
+                return;
+            }
+
+            cardsContainer.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+            emptyState.style.display = 'none';
+
+            // Card HTML generation
+            filteredData.forEach((item, index) => {
+                // Escape HTML for display in code block
+                const escapedHow = item.how.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                
+                const card = document.createElement('div');
+                card.className = `bg-white rounded-xl shadow-sm border border-slate-200 p-5 hover:shadow-md transition-shadow card-enter`;
+                card.style.animationDelay = `${index * 0.03}s`; // Staggered animation
+                
+                let comparisonHTML = item.comp ? `
+                    <div class="mt-4 pt-4 border-t border-slate-100">
+                        <p class="text-xs font-semibold text-amber-600 uppercase tracking-wider mb-1">Comparison</p>
+                        <p class="text-sm text-slate-600">${item.comp}</p>
+                    </div>
+                ` : '';
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-xl font-mono font-bold text-slate-800">${item.name.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</h3>
+                        <div class="flex gap-2">
+                            <span class="text-xs font-medium px-2 py-1 rounded-full border ${getBadgeColor(item.type)} capitalize">
+                                ${item.type}
+                            </span>
+                            <span class="text-xs font-medium px-2 py-1 rounded-full border bg-slate-100 text-slate-600 border-slate-200">
+                                Day ${item.day}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <p class="text-slate-600 text-sm mb-4 min-h-[40px]">${item.desc}</p>
+                    
+                    <div class="mb-4">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">How to use</p>
+                        <div class="code-block font-mono overflow-x-auto whitespace-pre">${escapedHow}</div>
+                    </div>
+                    
+                    <div>
+                        <p class="text-xs font-semibold text-brand-600 uppercase tracking-wider mb-1">Why & When</p>
+                        <p class="text-sm text-slate-700 leading-relaxed">${item.why}</p>
+                    </div>
+
+                    ${comparisonHTML}
+                `;
+                
+                cardsContainer.appendChild(card);
+            });
+        }
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                // Update active styling
+                tabs.forEach(t => {
+                    t.classList.remove('tab-active');
+                    t.classList.replace('text-brand-600', 'text-slate-500');
+                });
+                e.target.classList.add('tab-active');
+                
+                currentDay = e.target.dataset.day;
+                
+                // Update Title
+                if(currentDay === 'all') sectionTitle.textContent = "All Content";
+                if(currentDay === '1') sectionTitle.textContent = "Day 1: Basics & Media";
+                if(currentDay === '2') sectionTitle.textContent = "Day 2: Structure & Forms";
+                if(currentDay === '3') sectionTitle.textContent = "Day 3: Text, Tables & Advanced";
+                
+                renderCards();
+            });
+        });
+
+        searchInput.addEventListener('input', (e) => {
+            currentSearch = e.target.value;
+            renderCards();
+        });
+
+        typeFilter.addEventListener('change', (e) => {
+            currentType = e.target.value;
+            renderCards();
+        });
+
+        // Load initially
+        renderCards();
+
+    </script>
+</body>
+</html>
